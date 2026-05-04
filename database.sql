@@ -21,6 +21,7 @@ CREATE TABLE kost (
   longitude DECIMAL(11,8),
   deskripsi TEXT,
   gambar VARCHAR(255),
+  no_hp VARCHAR(20),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

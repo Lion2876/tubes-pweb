@@ -115,6 +115,13 @@ const Navbar = () => {
                         <p className="text-xs text-gray-500">{user.email}</p>
                         <span className="badge-blue mt-1">{user.role}</span>
                       </div>
+                      <Link
+                        to="/profile"
+                        className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        <User className="w-4 h-4" />
+                        Profil Saya
+                      </Link>
                       <button
                         onClick={handleLogout}
                         className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
@@ -187,6 +194,10 @@ const Navbar = () => {
                       <p className="text-xs text-gray-500">{user.email}</p>
                     </div>
                   </div>
+                  <Link to="/profile" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                    <User className="w-4 h-4" />
+                    Profil Saya
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"

@@ -65,31 +65,37 @@ const ComparePage = () => {
   const availableKosts = allKosts.filter(k => !selectedIds.includes(String(k.id)));
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <div className="min-h-screen bg-gray-50 relative overflow-hidden">
+      {/* Decorative gradient background */}
+      <div className="absolute top-0 inset-x-0 h-64 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 opacity-70 pointer-events-none" />
+      <div className="absolute -top-24 -right-24 w-96 h-96 bg-gradient-to-br from-indigo-200 to-purple-200 rounded-full blur-3xl opacity-30 pointer-events-none" />
+      <div className="absolute top-20 -left-20 w-72 h-72 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full blur-3xl opacity-30 pointer-events-none" />
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 relative z-10">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
-            <GitCompareArrows className="w-5 h-5 text-primary-600" />
+        <div className="flex items-center gap-4 mb-8 p-6 bg-white/60 backdrop-blur-md rounded-2xl shadow-sm border border-indigo-100/50">
+          <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
+            <GitCompareArrows className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Bandingkan Kost</h1>
-            <p className="text-sm text-gray-500">Bandingkan hingga 3 kost secara berdampingan</p>
+            <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">Bandingkan Kost</h1>
+            <p className="text-sm font-medium text-indigo-400 mt-0.5">Bandingkan hingga 3 kost secara berdampingan untuk menemukan yang terbaik</p>
           </div>
         </div>
 
         {/* Selector */}
         {availableKosts.length > 0 && selectedIds.length < 3 && (
-          <div className="card-premium p-4 mb-6">
-            <label className="text-sm font-medium text-gray-700 mb-2 block">Tambah kost untuk dibandingkan:</label>
-            <div className="flex flex-wrap gap-2">
+          <div className="bg-white rounded-2xl p-5 mb-6 shadow-sm border border-indigo-50 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-bl-full opacity-50 pointer-events-none"></div>
+            <label className="text-sm font-semibold text-indigo-900 mb-3 block relative z-10">Tambah kost untuk dibandingkan:</label>
+            <div className="flex flex-wrap gap-2 relative z-10">
               {availableKosts.slice(0, 10).map(k => (
                 <button
                   key={k.id}
                   onClick={() => addKost(k.id)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-primary-50 hover:text-primary-600 rounded-lg text-sm transition-all"
+                  className="flex items-center gap-1.5 px-3.5 py-2 bg-indigo-50/50 hover:bg-indigo-100 text-indigo-700 rounded-xl text-sm font-medium transition-all shadow-sm hover:shadow-md"
                 >
-                  <Plus className="w-3.5 h-3.5" />{k.nama}
+                  <Plus className="w-4 h-4" />{k.nama}
                 </button>
               ))}
             </div>

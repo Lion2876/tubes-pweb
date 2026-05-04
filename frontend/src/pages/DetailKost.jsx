@@ -13,7 +13,7 @@ import StarRating from '../components/StarRating';
 import {
   MapPin, Star, ChevronRight, Home, Wifi, Wind, Car, Bath,
   DoorOpen, Zap, Clock, UtensilsCrossed, Calculator, GitCompareArrows,
-  Send, Lightbulb, TrendingDown, PiggyBank, Utensils, Bus, Smartphone
+  Send, Lightbulb, TrendingDown, PiggyBank, Utensils, Bus, Smartphone, Phone
 } from 'lucide-react';
 
 // Fix Leaflet default marker icons
@@ -421,6 +421,25 @@ const DetailKost = () => {
                 ))}
               </div>
             </div>
+
+            {/* WhatsApp Contact Button */}
+            {kost.no_hp && (
+              <a
+                href={`https://wa.me/${kost.no_hp}?text=Halo,%20saya%20tertarik%20dengan%20${encodeURIComponent(kost.nama)}.%20Apakah%20masih%20tersedia?`}
+                target="_blank"
+                rel="noreferrer"
+                className="card-premium p-4 flex items-center gap-3 bg-green-50 hover:bg-green-100 border-green-200 transition-colors group"
+              >
+                <div className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                  <Phone className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="font-semibold text-green-800 text-sm">Hubungi via WhatsApp</p>
+                  <p className="text-xs text-green-600">+{kost.no_hp}</p>
+                </div>
+                <ChevronRight className="w-4 h-4 text-green-400 ml-auto" />
+              </a>
+            )}
 
             {/* Compare Button */}
             <Link to={`/compare?ids=${kost.id}`} className="card-premium p-4 flex items-center gap-3 hover:bg-primary-50 transition-colors group">

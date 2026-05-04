@@ -84,11 +84,11 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-2 text-sm text-gray-400">
                 <Mail className="w-4 h-4 text-violet-400 flex-shrink-0" />
-                info@infokostbengkulu.com
+                infokostbengkulu@gmail.com
               </li>
               <li className="flex items-center gap-2 text-sm text-gray-400">
                 <Phone className="w-4 h-4 text-violet-400 flex-shrink-0" />
-                +62 812 3456 7890
+                +62 896-7153-0066
               </li>
             </ul>
           </div>
@@ -102,7 +102,7 @@ const Footer = () => {
             © {new Date().getFullYear()} Infokost Bengkulu. All rights reserved.
           </p>
           <p className="text-xs text-gray-500 flex items-center gap-1">
-            Made with <Heart className="w-3 h-3 text-rose-400 fill-rose-400" /> di Bengkulu
+            Made with Kelompok 3 di Bengkulu
           </p>
         </div>
       </div>

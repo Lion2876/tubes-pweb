@@ -103,7 +103,7 @@ exports.getKostById = async (req, res) => {
 
 // POST /api/kost (admin)
 exports.createKost = async (req, res) => {
-  const { nama, harga, alamat, latitude, longitude, deskripsi } = req.body;
+  const { nama, harga, alamat, latitude, longitude, deskripsi, no_hp } = req.body;
   const gambar = req.file ? req.file.filename : 'default.jpg';
 
   // Validate required fields
@@ -113,8 +113,8 @@ exports.createKost = async (req, res) => {
 
   try {
     const [result] = await pool.execute(
-      'INSERT INTO kost (nama, harga, alamat, latitude, longitude, deskripsi, gambar) VALUES (?,?,?,?,?,?,?)',
-      [nama, harga, alamat, latitude || null, longitude || null, deskripsi || '', gambar]
+      'INSERT INTO kost (nama, harga, alamat, latitude, longitude, deskripsi, gambar, no_hp) VALUES (?,?,?,?,?,?,?,?)',
+      [nama, harga, alamat, latitude || null, longitude || null, deskripsi || '', gambar, no_hp || null]
     );
     const kostId = result.insertId;
 
@@ -144,7 +144,7 @@ exports.createKost = async (req, res) => {
 // PUT /api/kost/:id (admin)
 exports.updateKost = async (req, res) => {
   const { id } = req.params;
-  const { nama, harga, alamat, latitude, longitude, deskripsi } = req.body;
+  const { nama, harga, alamat, latitude, longitude, deskripsi, no_hp } = req.body;
   const gambar = req.file ? req.file.filename : undefined;
   const fields = [];
   const params = [];
@@ -156,6 +156,7 @@ exports.updateKost = async (req, res) => {
   if (longitude !== undefined && longitude !== '') { fields.push('longitude=?'); params.push(longitude); }
   if (deskripsi !== undefined) { fields.push('deskripsi=?'); params.push(deskripsi); }
   if (gambar) { fields.push('gambar=?'); params.push(gambar); }
+  if (no_hp !== undefined) { fields.push('no_hp=?'); params.push(no_hp || null); }
 
   try {
     if (fields.length > 0) {

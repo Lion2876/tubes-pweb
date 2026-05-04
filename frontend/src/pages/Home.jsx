@@ -66,7 +66,7 @@ const features = [
 
 const testimonials = [
   {
-    name: 'Andi S.',
+    name: 'Abel C.',
     role: 'Mahasiswa UNIB',
     text: 'Sangat membantu saat cari kost! Fitur peta dan reviewnya bikin gampang pilih kost yang tepat.',
     rating: 5,
@@ -74,19 +74,19 @@ const testimonials = [
     gradient: 'gradient-primary',
   },
   {
-    name: 'Dina R.',
-    role: 'Pekerja Swasta',
+    name: 'Widya P.',
+    role: 'Mahasiswa Artefak',
     text: 'Kalkulator estimasi biaya hidupnya keren banget. Jadi bisa plan budget bulanan dengan baik.',
     rating: 5,
-    initial: 'D',
+    initial: 'W',
     gradient: 'gradient-violet',
   },
   {
-    name: 'Budi P.',
+    name: 'Haiji T.',
     role: 'Mahasiswa Baru',
     text: 'Baru datang ke Bengkulu langsung bisa dapat kost yang cocok lewat platform ini. Recommended!',
     rating: 4,
-    initial: 'B',
+    initial: 'H',
     gradient: 'gradient-rose',
   },
 ];
@@ -132,6 +132,15 @@ const Home = () => {
         <div className="particle particle-7" />
 
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Background Image Kost - Menyesuaikan dengan warna biru/violet */}
+          <div className="absolute inset-0 lg:left-1/3 lg:w-2/3 h-full opacity-30 mix-blend-overlay">
+            <img
+              src="/homekost.jpg"
+              alt="Background Kost"
+              className="w-full h-full object-cover [mask-image:linear-gradient(to_top,transparent,black)] lg:[mask-image:linear-gradient(to_left,black_30%,transparent_100%)]"
+            />
+          </div>
+
           <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-white/[0.03] animate-float" />
           <div className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full bg-violet-400/10 animate-float" style={{ animationDelay: '1.5s' }} />
           <div className="absolute top-1/3 right-1/4 w-32 h-32 rounded-full bg-white/[0.02] animate-pulse-slow" />

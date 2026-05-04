@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Trash2, Shield, User, ChevronDown, RefreshCw } from 'lucide-react';
 import API from '../../utils/api';
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 
 const ManageUser = () => {
   const [users, setUsers] = useState([]);
@@ -12,8 +13,9 @@ const ManageUser = () => {
     try {
       const { data } = await API.get('/admin/users');
       setUsers(data);
-    } catch {
-      toast.error('Gagal memuat data user');
+    } catch (err) {
+      console.error('Fetch users error:', err);
+      toast.error('Gagal memuat data user: ' + (err.response?.data?.message || err.message));
     }
     setLoading(false);
   };
@@ -21,10 +23,34 @@ const ManageUser = () => {
   useEffect(() => { fetchUsers(); }, []);
 
   const deleteUser = async (id, nama) => {
-    if (window.confirm(`Yakin ingin menghapus user "${nama}"?\nSemua review dan wishlist user ini juga akan terhapus.`)) {
+    const result = await Swal.fire({
+      title: 'Hapus User?',
+      text: `Yakin ingin menghapus user "${nama}"? Semua review dan wishlist user ini juga akan terhapus.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#94a3b8',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal',
+      background: '#ffffff',
+      borderRadius: '1rem',
+      customClass: {
+        popup: 'rounded-2xl shadow-xl',
+        confirmButton: 'rounded-lg px-6 py-2.5 font-semibold shadow-md',
+        cancelButton: 'rounded-lg px-6 py-2.5 font-semibold shadow-sm'
+      }
+    });
+
+    if (result.isConfirmed) {
       try {
         await API.delete(`/admin/users/${id}`);
-        toast.success('User berhasil dihapus');
+        Swal.fire({
+          title: 'Terhapus!',
+          text: 'User berhasil dihapus.',
+          icon: 'success',
+          confirmButtonColor: '#8b5cf6',
+          customClass: { confirmButton: 'rounded-lg px-6 py-2.5 font-semibold' }
+        });
         fetchUsers();
       } catch (err) {
         toast.error(err.response?.data?.message || 'Gagal menghapus user');
@@ -33,11 +59,28 @@ const ManageUser = () => {
   };
 
   const changeRole = async (id, newRole, nama) => {
-    const confirmMsg = newRole === 'admin'
+    const isToAdmin = newRole === 'admin';
+    const confirmMsg = isToAdmin
       ? `Jadikan "${nama}" sebagai Admin? User akan mendapat akses penuh ke dashboard admin.`
       : `Ubah "${nama}" menjadi User biasa? Akses admin akan dicabut.`;
 
-    if (window.confirm(confirmMsg)) {
+    const result = await Swal.fire({
+      title: 'Ubah Role?',
+      text: confirmMsg,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: isToAdmin ? '#8b5cf6' : '#ec4899',
+      cancelButtonColor: '#94a3b8',
+      confirmButtonText: 'Ya, ubah!',
+      cancelButtonText: 'Batal',
+      customClass: {
+        popup: 'rounded-2xl shadow-xl',
+        confirmButton: 'rounded-lg px-6 py-2.5 font-semibold shadow-md',
+        cancelButton: 'rounded-lg px-6 py-2.5 font-semibold shadow-sm'
+      }
+    });
+
+    if (result.isConfirmed) {
       setChangingRole(id);
       try {
         await API.patch(`/admin/users/${id}/role`, { role: newRole });

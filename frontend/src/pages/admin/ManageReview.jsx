@@ -3,6 +3,7 @@ import { Trash2, Star, MessageSquare } from 'lucide-react';
 import API from '../../utils/api';
 import { toast } from 'react-toastify';
 import StarRating from '../../components/StarRating';
+import Swal from 'sweetalert2';
 
 const ManageReview = () => {
   const [reviews, setReviews] = useState([]);
@@ -12,8 +13,9 @@ const ManageReview = () => {
     try {
       const { data } = await API.get('/admin/reviews');
       setReviews(data);
-    } catch {
-      toast.error('Gagal memuat data review');
+    } catch (err) {
+      console.error('Fetch reviews error:', err);
+      toast.error('Gagal memuat data review: ' + (err.response?.data?.message || err.message));
     }
     setLoading(false);
   };
@@ -21,10 +23,34 @@ const ManageReview = () => {
   useEffect(() => { fetchReviews(); }, []);
 
   const deleteReview = async (id) => {
-    if (window.confirm('Yakin ingin menghapus review ini?')) {
+    const result = await Swal.fire({
+      title: 'Hapus Review?',
+      text: 'Yakin ingin menghapus review ini?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#94a3b8',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal',
+      background: '#ffffff',
+      borderRadius: '1rem',
+      customClass: {
+        popup: 'rounded-2xl shadow-xl',
+        confirmButton: 'rounded-lg px-6 py-2.5 font-semibold shadow-md',
+        cancelButton: 'rounded-lg px-6 py-2.5 font-semibold shadow-sm'
+      }
+    });
+
+    if (result.isConfirmed) {
       try {
         await API.delete(`/review/${id}`);
-        toast.success('Review berhasil dihapus');
+        Swal.fire({
+          title: 'Terhapus!',
+          text: 'Review berhasil dihapus.',
+          icon: 'success',
+          confirmButtonColor: '#8b5cf6',
+          customClass: { confirmButton: 'rounded-lg px-6 py-2.5 font-semibold' }
+        });
         fetchReviews();
       } catch {
         toast.error('Gagal menghapus review');

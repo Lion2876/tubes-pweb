@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Plus, Pencil, Trash2, X, Upload, MapPin, Eye } from 'lucide-react';
+import { Plus, Pencil, Trash2, X, Upload, MapPin, Eye, Phone } from 'lucide-react';
 import API from '../../utils/api';
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 import { formatRupiah, getImageUrl } from '../../utils/helpers';
 
 // Fix Leaflet default marker icons
@@ -31,7 +32,7 @@ const ManageKost = () => {
   const [showForm, setShowForm] = useState(false);
   const [editKost, setEditKost] = useState(null);
   const [formData, setFormData] = useState({
-    nama: '', harga: '', alamat: '', latitude: '-3.7982', longitude: '102.2600', deskripsi: '', fasilitas: []
+    nama: '', harga: '', alamat: '', latitude: '-3.7982', longitude: '102.2600', deskripsi: '', fasilitas: [], no_hp: ''
   });
   const [gambar, setGambar] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -61,7 +62,7 @@ const ManageKost = () => {
   useEffect(() => { fetchKosts(); fetchFasilitas(); }, []);
 
   const resetForm = () => {
-    setFormData({ nama: '', harga: '', alamat: '', latitude: '-3.7982', longitude: '102.2600', deskripsi: '', fasilitas: [] });
+    setFormData({ nama: '', harga: '', alamat: '', latitude: '-3.7982', longitude: '102.2600', deskripsi: '', fasilitas: [], no_hp: '' });
     setGambar(null); setPreview(null); setShowMapPicker(false);
   };
 
@@ -72,7 +73,7 @@ const ManageKost = () => {
     setFormData({
       nama: kost.nama, harga: kost.harga, alamat: kost.alamat,
       latitude: kost.latitude || '-3.7982', longitude: kost.longitude || '102.2600',
-      deskripsi: kost.deskripsi || '', fasilitas: []
+      deskripsi: kost.deskripsi || '', fasilitas: [], no_hp: kost.no_hp || ''
     });
     setGambar(null); setPreview(getImageUrl(kost.gambar)); setShowMapPicker(false);
     setShowForm(true);
@@ -112,6 +113,7 @@ const ManageKost = () => {
     fd.append('latitude', formData.latitude);
     fd.append('longitude', formData.longitude);
     fd.append('deskripsi', formData.deskripsi.trim());
+    fd.append('no_hp', formData.no_hp.trim());
     formData.fasilitas.forEach(f => fd.append('fasilitas[]', f));
     if (gambar) fd.append('gambar', gambar);
 
@@ -132,10 +134,34 @@ const ManageKost = () => {
   };
 
   const deleteKost = async (id, nama) => {
-    if (window.confirm(`Yakin ingin menghapus "${nama}"?\nData review dan wishlist terkait juga akan terhapus.`)) {
+    const result = await Swal.fire({
+      title: 'Hapus Kost?',
+      text: `Yakin ingin menghapus "${nama}"? Data review dan wishlist terkait juga akan terhapus.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#94a3b8',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal',
+      background: '#ffffff',
+      borderRadius: '1rem',
+      customClass: {
+        popup: 'rounded-2xl shadow-xl',
+        confirmButton: 'rounded-lg px-6 py-2.5 font-semibold shadow-md',
+        cancelButton: 'rounded-lg px-6 py-2.5 font-semibold shadow-sm'
+      }
+    });
+
+    if (result.isConfirmed) {
       try {
         await API.delete(`/kost/${id}`);
-        toast.success('Kost berhasil dihapus');
+        Swal.fire({
+          title: 'Terhapus!',
+          text: 'Kost berhasil dihapus.',
+          icon: 'success',
+          confirmButtonColor: '#8b5cf6',
+          customClass: { confirmButton: 'rounded-lg px-6 py-2.5 font-semibold' }
+        });
         fetchKosts();
       } catch { toast.error('Gagal menghapus'); }
     }
@@ -300,6 +326,16 @@ const ManageKost = () => {
                 <label className="text-sm font-medium text-gray-700 mb-1 block">Deskripsi</label>
                 <textarea rows="3" className="input-modern resize-none" placeholder="Deskripsi kost, lingkungan, keunggulan, dll." value={formData.deskripsi}
                   onChange={e => setFormData({...formData, deskripsi: e.target.value})} />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-1 block">No. WhatsApp Pemilik</label>
+                <div className="relative group">
+                  <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
+                  <input className="input-modern !pl-11" placeholder="Contoh: 628123456789" value={formData.no_hp}
+                    onChange={e => setFormData({...formData, no_hp: e.target.value})} />
+                </div>
+                <p className="text-xs text-gray-400 mt-1">Format: 628xx (tanpa tanda +, spasi, atau strip)</p>
               </div>
 
               <div>

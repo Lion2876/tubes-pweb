@@ -37,10 +37,16 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  const updateUser = (updatedFields) => {
+    const newUser = { ...user, ...updatedFields };
+    localStorage.setItem('user', JSON.stringify(newUser));
+    setUser(newUser);
+  };
+
   if (loading) return <LoadingSpinner />;
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, registerUser, isAdmin: user?.role === 'admin' }}>
+    <AuthContext.Provider value={{ user, login, logout, registerUser, updateUser, isAdmin: user?.role === 'admin' }}>
       {children}
     </AuthContext.Provider>
   );

@@ -52,3 +52,37 @@ exports.deleteReview = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// GET /api/review/user/me
+exports.getUserReviews = async (req, res) => {
+  const userId = req.user.id;
+  try {
+    const [rows] = await pool.execute(
+      `SELECT r.id, r.rating, r.komentar, r.created_at, k.nama AS kost_nama, k.id AS kost_id
+       FROM review r
+       JOIN kost k ON r.kost_id = k.id
+       WHERE r.user_id = ?
+       ORDER BY r.created_at DESC`,
+      [userId]
+    );
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// DELETE /api/review/user/:id
+exports.deleteUserReview = async (req, res) => {
+  const { id } = req.params;
+  const userId = req.user.id;
+  try {
+    const [check] = await pool.execute('SELECT user_id FROM review WHERE id=?', [id]);
+    if (check.length === 0) return res.status(404).json({ message: 'Review tidak ditemukan' });
+    if (check[0].user_id !== userId) return res.status(403).json({ message: 'Akses ditolak' });
+
+    await pool.execute('DELETE FROM review WHERE id=?', [id]);
+    res.json({ message: 'Review berhasil dihapus' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

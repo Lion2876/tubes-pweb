@@ -15,6 +15,8 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageKost from './pages/admin/ManageKost';
 import ManageUser from './pages/admin/ManageUser';
 import ManageReview from './pages/admin/ManageReview';
+import ProfilePage from './pages/ProfilePage';
+import ForgotPassword from './pages/ForgotPassword';
 
 const AppContent = () => {
   const location = useLocation();
@@ -30,6 +32,8 @@ const AppContent = () => {
         <Route path="/cari" element={<SearchPage />} />
         <Route path="/kost/:id" element={<DetailKost />} />
         <Route path="/wishlist" element={<PrivateRoute><WishlistPage /></PrivateRoute>} />
+        <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/compare" element={<ComparePage />} />
         {/* Admin routes */}
         <Route path="/admin" element={<PrivateRoute adminOnly><AdminDashboard /></PrivateRoute>}>
